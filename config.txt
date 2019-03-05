@@ -1,0 +1,52 @@
+** COMMENTS ** 
+Comparing End and Centroid behaviour in a noisy system.
+** General inputs **
+output_loc=data/noise_compare_2
+
+** Simulation Inputs **
+// Simulation time step, nanoseconds
+dt=1
+// Writeout timestep, nanoseconds
+dt_sample=1000
+// How many writeout timesteps per intensity integration
+integration_steps=5
+// How many writouts to output per scan point?
+samples_per_position=100
+// What is the uncertainty in position measurement? nanometres
+position_noise_sigma=30
+
+** Scanning Inputs **
+// Width of scanning, we do +/- this from O (nano metres)
+x_scan_width=1500
+y_scan_width=1500
+x_scan_points=200
+y_scan_points=200
+
+** Intensity Image Inputs **
+img_loc=USAF.txt
+dimension=780
+// width of the image, micrometers
+x_width=1.4
+y_width=1.4
+
+** Object Inputs **
+//object radius, nanometres
+radius=50 
+//object density, kg/m^3
+object_density=3000
+kernel_width=5
+// the above is doubled to do the actual width!
+
+** Fluid / Trap Inputs **
+//temperature, Kelvin
+temp=300
+//dynamic viscocity Ns/m^2
+dyn_visc=0.001
+// stuffnesses, N/m
+stiffness_x=0.0000231
+stiffness_y=0.000004125
+
+
+
+
+
