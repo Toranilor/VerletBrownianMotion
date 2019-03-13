@@ -5,7 +5,7 @@ It keeps a continuously diffusing / trapped sphere and varies a static offset
 (which is the scanning parameter), and uses the combined position to infer 
 an intensity from a given image. Output is combined position, time, and intensities
 
-Compiler Command: g++ -O3 MajorVerlet2D.cpp -o MajorVerlet2D
+Compiler Command: g++ -O3 MajorVerlet2DSpeedy.cpp -o Major
 */
 #include <iostream>
 #include <fstream>
@@ -229,7 +229,7 @@ double i_get_kernel_old(vector<vector<double>> &im_array, double xt, double yt,
 
     for(int i=0; i<xk_width; i++){
         x_temp = (i+0.5-xk_width/2)*(2*radius/xk_width)+xt;
-        for(int j=0; j<xk_width; j++){
+        for(int j=0; j<yk_width; j++){
             // Convert kernel index value into x and y positions
             y_temp = (j+0.5-yk_width/2)*(2*radius/yk_width)+yt;
             i_out += i_get_interp(im_array, x_temp, y_temp, x_width, y_width, dimension);
@@ -569,6 +569,7 @@ int main (int argc, char ** argv)
     ofstream info_out_file(output_name+"_info_out.txt");
     ofstream kernel_out(output_name+"_kernel.txt");
     ofstream combo_out_file(output_name+"_combo_out.txt");
+    ofstream timing_out_file(output_name+"_timing_out.txt");
     // Write everything to .txt
     for (int i = 1; i < size; ++i){
         combo_out_file << t_out[i] << '\t'
@@ -597,19 +598,21 @@ int main (int argc, char ** argv)
         kernel_out<<'\n';
     } 
 
-    cout << "\nTIMING DETAILS \nTotal time in seconds is " << microseconds/1000000 <<'\n';
-    cout << "With a total of " << size 
-    << " outputs, this is " << microseconds/size;
-    cout << " us per output\n";
-    cout << "With a timestep size of " << dt << " s, and duration-of-output of "<< dt_sample << " s";
-    cout << ",\nthis is a total of " 
+    timing_out_file << "\nTIMING DETAILS \nTotal time in seconds is " << microseconds/1000000 <<'\n'
+    << "With a total of " << size 
+    << " outputs, this is " << microseconds/size
+    << " us per output\n"
+    << "With a timestep size of " << dt << " s, and duration-of-output of "<< dt_sample << " s"
+    << ",\nthis is a total of " 
     << (double)microseconds/(double)size/(double)dts_per_sample
-    << " microseconds per single-loop.\n";
-    cout << "X-position Loop Average Time (ns): " << x_end_tot/(double)size/(double)dts_per_sample <<'\n';
-    cout << "Y-position Loop Average Time (ns): " << y_end_tot/(double)size/(double)dts_per_sample <<'\n';
-    cout << "Intensity Loop Average Time (ns): " << i_end_tot/(double)size/(double)dts_per_sample <<'\n';
-    cout << "Write-Loop Average Time (ns): "<< write_end/(double)size/(double)dts_per_sample <<'\n';
-    cout << "Estimated total-time taken [SHOULD MATCH THE ABOVE] (s): " << (x_end_tot+y_end_tot+i_end_tot+write_end)/double(1000000000) <<'\n';
+    << " microseconds per single-loop.\n"
+    << "X-position Loop Average Time (ns): " << x_end_tot/(double)size/(double)dts_per_sample <<'\n'
+    << "Y-position Loop Average Time (ns): " << y_end_tot/(double)size/(double)dts_per_sample <<'\n'
+    << "Intensity Loop Average Time (ns): " << i_end_tot/(double)size/(double)dts_per_sample <<'\n'
+    << "Write-Loop Average Time (ns): "<< write_end/(double)size/(double)dts_per_sample <<'\n'
+    << "Estimated total-time taken [SHOULD MATCH THE ABOVE] (s): " << (x_end_tot+y_end_tot+i_end_tot+write_end)/double(1000000000) <<'\n';
+
+    cout << "Running Complete! Look at timing log file for analysis.\n";
 
 
     return 0;
